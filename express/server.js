@@ -11,7 +11,83 @@ router.get('/', (req, res) => {
   res.write('<h1>Hello from Express.js!</h1>');
   res.end();
 });
-router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
+
+
+router.get('/validate', (req, res) => {
+  
+router.post("/validate", (req, res) => {
+ 
+
+  let body = req.body;
+  let domainName = body.domain_name;
+  let url = body.url;
+  let isCached = body.isCached;
+  let cacheStatus = body.cacheStatus;
+
+  let status;
+
+  if (domainName == "google.com") {
+    status = {
+      threatLevel: "trusted",
+      threatScore: 0,
+      threatMessage: null,
+      isWhitelisted: false,
+      isOtherWhitelisted: true,
+      isBlacklisted: false,
+      isOtherBlacklisted: false,
+      parentDomain: "google.com",
+      siteDescription: "Google Search Engine",
+      Labels: {
+        "Search Engine": "#56000",
+        "Trusted Site": "GREEN",
+      },
+      customButtons: {},
+    };
+  } else if (domainName == "yahoo.com") {
+    status = {
+      threatLevel: "blacklisted",
+      threatScore: 0,
+      threatMessage: "Phishing Site",
+      isWhitelisted: false,
+      isOtherWhitelisted: true,
+      isBlacklisted: true,
+      isOtherBlacklisted: false,
+      parentDomain: "phish.com",
+      siteDescription: null,
+      Labels: {
+        Phishing: "RED",
+        "Some other labels": "RED",
+      },
+      customButtons: {
+        "Button One": {
+          img: "...",
+          text: "Open Report",
+          color: "...",
+          hoverColor: "...",
+          link: "https://report.com/?=phish.com",
+        },
+      },
+    };
+  } else {
+    status = {
+      threatLevel: "neutral",
+      threatScore: 0,
+      threatMessage: null,
+      isWhitelisted: false,
+      isOtherWhitelisted: false,
+      isBlacklisted: false,
+      isOtherBlacklisted: false,
+      parentDomain: "xyz.com",
+      siteDescription: null,
+      Labels: {},
+      customButtons: {},
+    };
+  }
+  
+  res.json(status)
+  
+});
+  
 router.post('/', (req, res) => res.json({ postBody: req.body }));
 
 app.use(bodyParser.json());
